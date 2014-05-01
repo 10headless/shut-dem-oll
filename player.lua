@@ -28,19 +28,8 @@ function player.update(dt)
 		player.facing = "l"
 	end
 
-	for i, v in ipairs(bullets) do
-		if v.facing == "u" then
-			v.y = v.y - sBullet.speed*dt
-		end
-		if v.facing == "d" then
-			v.y = v.y + sBullet.speed*dt
-		end
-		if v.facing == "r" then
-			v.x = v.x + sBullet.speed*dt
-		end
-		if v.facing == "l" then
-			v.x = v.x - sBullet.speed*dt
-		end
+	if true == true then
+
 	end
 end
 
