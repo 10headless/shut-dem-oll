@@ -67,12 +67,41 @@ function enemy.move(dt)
 	end
 end
 
+--Collision handling
+function enemy.collisions()
+	remEnemy = {}
+	remShots = {}
+	for i, v in ipairs(bullets) do
+		for j, b in ipairs(enemies) do
+			if checkCollision(b.x, b.y, b.w, b.h, v.x, v.y, sBullet.w, sBullet.h) then
+				table.insert(remShots, i)
+				b.health = b.health - sBullet.power
+				if b.health <= 0 then
+					table.insert(remEnemy, j)
+				end
+			end
+		end
+	end
+	for j, b in ipairs(enemies) do
+		if checkCollision(b.x, b.y, b.w, b.h, player.x, player.y, player.w, player.h) then
+			table.insert(remEnemy, j)
+			player.health = player.health - b.health
+		end
+	end
 
+	for i, v in ipairs(remEnemy) do
+		table.remove(enemies, v)
+	end
+	for i, v in ipairs(remShots) do
+		table.remove(bullets, v)
+	end
+end
 
 
 function enemy.update(dt)
 	enemy.physics(dt)
 	enemy.move(dt)
+	enemy.collisions()
 end
 
 function enemy.draw()

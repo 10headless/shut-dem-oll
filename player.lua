@@ -11,6 +11,7 @@ function player.load(x, y, w, h, power)
 	player.xvel = 0
 	player.yvel = 0
 	player.power = power
+	player.health = 100
 end
 
 --Basic physics
