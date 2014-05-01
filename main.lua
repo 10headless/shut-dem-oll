@@ -1,9 +1,9 @@
 require "player"
 require "enemy"
 
-keys = {up = "w", down = "s", left = "a", right = "d", shoot = "lctrl"}
+keys = {up = "w", down = "s", left = "a", right = "d", shoot = "lctrl", u2 = "up", d2 = "down", r2 = "right", l2 = "left"}
 bullets = {}
-sBullet = {w = 6, h = 20, speed = 400}     --Standard bullet (to make stuff easy to tweak and change)
+sBullet = {w = 8, h = 8, speed = 400}     --Standard bullet (to make stuff easy to tweak and change)
 
 function love.load()
 	player.load(200,200,60,60, 50)
