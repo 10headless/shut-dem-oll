@@ -6,6 +6,7 @@ currentMap = "start"
 path = {}
 pathDis = 0
 mapWidth = 0
+curMap = {}
 
 function map.loadMaps()
 	files = love.filesystem.getDirectoryItems("maps/" )
@@ -28,10 +29,10 @@ function map.draw()
 					end
 					tmp = v.height-y
 					love.graphics.rectangle("fill", 50*(x-1)+15, 50*(tmp)+10, 50,50)
-
 				end
 			end
 			mapWidth = v.width
+			curMap = v
 		end
 	end
 end

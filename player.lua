@@ -1,6 +1,9 @@
 require "map"
+require "materials/materials"
 
 player = {}
+maxFallSpeed =320
+maxJumpSpeed =400
 
 function player.load(x, y, w, h, power)
 	player.x = x
@@ -15,6 +18,8 @@ function player.load(x, y, w, h, power)
 	player.power = power
 	player.health = 100
 	player.maxHealth = 100
+	player.jumping = false
+	riseYvel = false
 end
 
 --Basic physics
@@ -22,7 +27,6 @@ function player.physics(dt)
 	player.x = player.x + player.xvel * dt
 	player.y = player.y + player.yvel * dt
 	player.xvel = player.xvel * (1 - math.min(dt*player.friction, 1))
-	player.yvel = player.yvel * (1 - math.min(dt*player.friction, 1))
 end
 
 --Player movement, shoot direction control and map collisions
@@ -36,7 +40,59 @@ function player.control(dt)
 		player.facing = "l"
 	end
 
+	if player.yvel < maxFallSpeed then
+		if riseYvel == false then
+			player.yvel = player.yvel + 2*maxFallSpeed*dt
+		else
+			player.yvel = player.yvel - 10*maxJumpSpeed*dt
+			print(player.yvel.."    "..maxJumpSpeed)
+			if player.yvel <= -maxJumpSpeed then
+				riseYvel = false
+			end	
+		end
+	end
 
+	for x, v in ipairs(curMap.map) do
+		for j, b in ipairs(v) do
+			y = curMap.height - j
+			for l, m in ipairs(materials) do
+				if m.id == b then
+					if m.collide then
+						if bounds(player.x, player.w, x*50+15-50, 50) then
+							if player.y + player.h/2 <= y*50+35 then
+								if player.y + player.h>= y*50+10 then
+									if player.yvel > 0 then
+										player.yvel = 0
+										player.y = y*50+10 - player.h
+										player.jumping = false
+									end
+								end
+							end
+						end
+						if bounds(player.y, player.h, 50*y+10, 50) then
+							if player.x + player.w/2 >= x*50-10 then
+								if player.x <= x*50+15 then
+									if player.xvel < 0 then
+										player.xvel = 0
+										player.x = x*50+15
+									end
+								end
+							end
+							if player.x + player.w/2 <= x*50-10 then
+								if player.x + player.w>= x*50+15-50 then
+									if player.xvel > 0 then
+										player.xvel = 0
+										player.x = x*50+15-50-player.w
+									end
+								end
+							end
+						end
+						
+					end
+				end
+			end
+		end
+	end	
 end
 
 --Shoot handling
@@ -46,6 +102,14 @@ function player.shoot()
 	end
 	if player.facing == "l" then
 		table.insert(bullets, {x = player.x - sBullet.h, y = player.y + (player.h-sBullet.w)/2, xvel = -sBullet.speed, yvel = 0})
+	end
+end
+
+--Jumping
+function player.jump()
+	if player.jumping == false then
+		player.jumping = true 
+		riseYvel = true
 	end
 end
 

@@ -79,6 +79,8 @@ function enemy.collisions()
 			if checkCollision(b.x, b.y, b.w, b.h, v.x, v.y, sBullet.w, sBullet.h) then
 				table.insert(remShots, i)
 				b.health = b.health - sBullet.power
+
+				place_effect(b.x+b.w/2, b.y, 50, blood)
 				if b.health <= 0 then
 					table.insert(remEnemy, j)
 				end
@@ -89,7 +91,7 @@ function enemy.collisions()
 		if checkCollision(b.x, b.y, b.w, b.h, player.x, player.y, player.w, player.h) then
 			table.insert(remEnemy, j)
 			player.health = player.health - b.health
-			place_effect(player.x, player.y, 10, blood)
+			place_effect(player.x+player.w/2, player.y, 50, blood)
 		end
 	end
 
