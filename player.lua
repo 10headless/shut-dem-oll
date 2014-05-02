@@ -1,3 +1,5 @@
+require "map"
+
 player = {}
 
 function player.load(x, y, w, h, power)
@@ -23,79 +25,27 @@ function player.physics(dt)
 	player.yvel = player.yvel * (1 - math.min(dt*player.friction, 1))
 end
 
---Player movement and shoot direction control
+--Player movement, shoot direction control and map collisions
 function player.control(dt)
-	if love.keyboard.isDown(keys.down) and player.yvel < player.speed then
-		player.yvel = player.yvel + player.speed*dt
-	end
-	if love.keyboard.isDown(keys.up) and player.yvel > -player.speed  then
-		player.yvel = player.yvel - player.speed*dt
-	end
 	if love.keyboard.isDown(keys.right) and player.xvel < player.speed then
 		player.xvel = player.xvel + player.speed*dt
+		player.facing = "r"
 	end
 	if love.keyboard.isDown(keys.left) and player.xvel > -player.speed then
 		player.xvel = player.xvel - player.speed*dt
-	end
-
-	if love.keyboard.isDown(keys.u2) and love.keyboard.isDown(keys.l2)~= true and love.keyboard.isDown(keys.r2)~=true then
-		player.facing = "u"
-	end
-	if love.keyboard.isDown(keys.d2) and love.keyboard.isDown(keys.l2)~= true and love.keyboard.isDown(keys.r2)~=true then
-		player.facing = "d"
-	end
-	if love.keyboard.isDown(keys.r2) and love.keyboard.isDown(keys.u2)~= true and love.keyboard.isDown(keys.d2)~=true then
-		player.facing = "r"
-	end
-	if love.keyboard.isDown(keys.l2) and love.keyboard.isDown(keys.u2)~= true and love.keyboard.isDown(keys.d2)~=true then
 		player.facing = "l"
 	end
-	if love.keyboard.isDown(keys.u2) and love.keyboard.isDown(keys.l2) then
-		player.facing = "ul"
-	end
-	if love.keyboard.isDown(keys.u2) and love.keyboard.isDown(keys.r2) then
-		player.facing = "ur"
-	end
-	if love.keyboard.isDown(keys.d2) and love.keyboard.isDown(keys.l2) then
-		player.facing = "dl"
-	end
-	if love.keyboard.isDown(keys.d2) and love.keyboard.isDown(keys.r2) then
-		player.facing = "dr"
-	end
+
+
 end
 
 --Shoot handling
 function player.shoot()
-	if player.facing == "u" then
-		table.insert(bullets, {x = (player.x + (player.w - sBullet.w) / 2), y = player.y - sBullet.h, xvel = 0, yvel = -sBullet.speed})
-	end
-	if player.facing == "d" then
-		table.insert(bullets, {x = (player.x + (player.w - sBullet.w) / 2), y = player.y + player.h, xvel = 0, yvel = sBullet.speed})
-	end
 	if player.facing == "r" then
 		table.insert(bullets, {x = player.x + player.w, y = player.y + (player.h-sBullet.w)/2, xvel = sBullet.speed, yvel = 0})
 	end
 	if player.facing == "l" then
 		table.insert(bullets, {x = player.x - sBullet.h, y = player.y + (player.h-sBullet.w)/2, xvel = -sBullet.speed, yvel = 0})
-	end
-	if player.facing == "ul" then
-		table.insert(bullets, {x = player.x - sBullet.h/math.sqrt(2), y = player.y - sBullet.h/math.sqrt(2), xvel = -sBullet.speed/math.sqrt(2),
-			yvel = -sBullet.speed/math.sqrt(2)})
-	end
-	if player.facing == "ur" then
-		table.insert(bullets, {x = player.x + player.w + sBullet.h/math.sqrt(2), y = player.y - sBullet.h/math.sqrt(2), 
-			xvel = sBullet.speed/math.sqrt(2),
-			yvel = -sBullet.speed/math.sqrt(2)})
-	end
-	if player.facing == "dl" then
-		table.insert(bullets, {x = player.x - sBullet.h/math.sqrt(2), y = player.y + player.h + sBullet.h/math.sqrt(2), 
-			xvel = -sBullet.speed/math.sqrt(2),
-			yvel = sBullet.speed/math.sqrt(2)})
-	end
-	if player.facing == "dr" then
-		table.insert(bullets, {x = player.x + player.w + sBullet.h/math.sqrt(2), y = player.y + player.h + sBullet.h/math.sqrt(2), 
-			xvel = sBullet.speed/math.sqrt(2),
-			yvel = sBullet.speed/math.sqrt(2)})
 	end
 end
 
@@ -120,13 +70,13 @@ end
 --In-game HUB drawing
 function hubDraw()
 	love.graphics.setColor(90,90,90)
-	love.graphics.rectangle("fill", 1080, 710, 200, 10)
+	love.graphics.rectangle("fill", 1080+camera.x, 710, 200, 10)
 	love.graphics.setColor(0,255,0)
-	love.graphics.rectangle("fill", 1080, 710, 200,10)
+	love.graphics.rectangle("fill", 1080+camera.x, 710, 200,10)
 	love.graphics.setColor(90,90,90)
-	love.graphics.rectangle("fill", 1080, 700, 200, 10)
+	love.graphics.rectangle("fill", 1080+camera.x, 700, 200, 10)
 	love.graphics.setColor(255,0,0)
-	love.graphics.rectangle("fill", 1080, 700, 200*(player.health/player.maxHealth),10)
+	love.graphics.rectangle("fill", 1080+camera.x, 700, 200*(player.health/player.maxHealth),10)
 end
 
 

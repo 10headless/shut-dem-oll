@@ -1,4 +1,5 @@
 require "player"
+require "particles"
 
 enemy = {}
 enemies = {}
@@ -88,6 +89,7 @@ function enemy.collisions()
 		if checkCollision(b.x, b.y, b.w, b.h, player.x, player.y, player.w, player.h) then
 			table.insert(remEnemy, j)
 			player.health = player.health - b.health
+			place_effect(player.x, player.y, 10, blood)
 		end
 	end
 

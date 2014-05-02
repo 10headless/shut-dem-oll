@@ -2,6 +2,9 @@ love.math.setRandomSeed(os.time())
 require "player"
 require "enemy"
 require "menu"
+require "particles"
+require "camera"
+require "map"
 
 gamestate = "menu"
 
@@ -9,18 +12,27 @@ keys = {up = "w", down = "s", left = "a", right = "d", shoot = "lctrl", u2 = "up
 bullets = {}
 sBullet = {w = 8, h = 8, speed = 400, power = 25}     --Standard bullet (to make stuff easy to tweak and change)
 fontBig = love.graphics.newFont(30)
+blood = love.graphics.newImage("assets/blood2.png")
 
 function love.load()
 	love.graphics.setBackgroundColor(240,240,240)
-	player.load(200,200,60,60, 50)
+	player.load(200,200,50,50, 50)
 	enemy.load(1200, 500, 50, 50, 50, 700, 2)
 	menu.createButton(200, 200, 40, 20, true, true, "PLAY", "play", "menu")
+	menu.createButton(200, 270, 40, 20, true, true, "EXIT", "exit", "menu")
+	map.loadMaps()
 end
 
 function love.update(dt)
 	if gamestate == "game" then
 		player.update(dt)
 		enemy.update(dt)
+		update_effect(dt)
+
+		--Camera movement
+		if player.x+player.w/2 > 1280/2 and player.x + player.w/2 < mapWidth*50+50+30 - 1280/2 then
+			camera.x = player.x + player.w/2 - 1280/2
+		end
 	end
 	if gamestate == "menu" then
 		menu.update(dt, "menu")
@@ -28,13 +40,17 @@ function love.update(dt)
 end
 
 function love.draw()
+	camera:set()
 	if gamestate == "game" then
+		map.draw()
 		player.draw()
 		enemy.draw()
+		draw_effect()
 	end
 	if gamestate == "menu" then
 		menu.draw("menu")
 	end
+	camera:unset()
 end
 
 
