@@ -12,6 +12,7 @@ function player.load(x, y, w, h, power)
 	player.yvel = 0
 	player.power = power
 	player.health = 100
+	player.maxHealth = 100
 end
 
 --Basic physics
@@ -66,62 +67,43 @@ end
 --Shoot handling
 function player.shoot()
 	if player.facing == "u" then
-		table.insert(bullets, {x = (player.x + (player.w - sBullet.w) / 2), y = player.y - sBullet.h, facing = "u"})
+		table.insert(bullets, {x = (player.x + (player.w - sBullet.w) / 2), y = player.y - sBullet.h, xvel = 0, yvel = -sBullet.speed})
 	end
 	if player.facing == "d" then
-		table.insert(bullets, {x = (player.x + (player.w - sBullet.w) / 2), y = player.y + player.h, facing = "d"})
+		table.insert(bullets, {x = (player.x + (player.w - sBullet.w) / 2), y = player.y + player.h, xvel = 0, yvel = sBullet.speed})
 	end
 	if player.facing == "r" then
-		table.insert(bullets, {x = player.x + player.w, y = player.y + (player.h-sBullet.w)/2, facing = "r"})
+		table.insert(bullets, {x = player.x + player.w, y = player.y + (player.h-sBullet.w)/2, xvel = sBullet.speed, yvel = 0})
 	end
 	if player.facing == "l" then
-		table.insert(bullets, {x = player.x - sBullet.h, y = player.y + (player.h-sBullet.w)/2, facing = "l"})
+		table.insert(bullets, {x = player.x - sBullet.h, y = player.y + (player.h-sBullet.w)/2, xvel = -sBullet.speed, yvel = 0})
 	end
 	if player.facing == "ul" then
-		table.insert(bullets, {x = player.x - sBullet.h/math.sqrt(2), y = player.y - sBullet.h/math.sqrt(2), facing = "ul"})
+		table.insert(bullets, {x = player.x - sBullet.h/math.sqrt(2), y = player.y - sBullet.h/math.sqrt(2), xvel = -sBullet.speed/math.sqrt(2),
+			yvel = -sBullet.speed/math.sqrt(2)})
 	end
 	if player.facing == "ur" then
-		table.insert(bullets, {x = player.x + player.w + sBullet.h/math.sqrt(2), y = player.y - sBullet.h/math.sqrt(2), facing = "ur"})
+		table.insert(bullets, {x = player.x + player.w + sBullet.h/math.sqrt(2), y = player.y - sBullet.h/math.sqrt(2), 
+			xvel = sBullet.speed/math.sqrt(2),
+			yvel = -sBullet.speed/math.sqrt(2)})
 	end
 	if player.facing == "dl" then
-		table.insert(bullets, {x = player.x - sBullet.h/math.sqrt(2), y = player.y + player.h + sBullet.h/math.sqrt(2), facing = "dl"})
+		table.insert(bullets, {x = player.x - sBullet.h/math.sqrt(2), y = player.y + player.h + sBullet.h/math.sqrt(2), 
+			xvel = -sBullet.speed/math.sqrt(2),
+			yvel = sBullet.speed/math.sqrt(2)})
 	end
 	if player.facing == "dr" then
-		table.insert(bullets, {x = player.x + player.w + sBullet.h/math.sqrt(2), y = player.y + player.h + sBullet.h/math.sqrt(2), facing = "dr"})
+		table.insert(bullets, {x = player.x + player.w + sBullet.h/math.sqrt(2), y = player.y + player.h + sBullet.h/math.sqrt(2), 
+			xvel = sBullet.speed/math.sqrt(2),
+			yvel = sBullet.speed/math.sqrt(2)})
 	end
 end
 
 --Bullet movement
 function bulletUpdate(dt)
 	for i, v in ipairs(bullets) do
-		if v.facing == "u" then
-			v.y = v.y - sBullet.speed*dt
-		end
-		if v.facing == "d" then
-			v.y = v.y + sBullet.speed*dt
-		end
-		if v.facing == "r" then
-			v.x = v.x + sBullet.speed*dt
-		end
-		if v.facing == "l" then
-			v.x = v.x - sBullet.speed*dt
-		end
-		if v.facing == "ur" then
-			v.x = v.x + (sBullet.speed/math.sqrt(2))*dt
-			v.y = v.y - (sBullet.speed/math.sqrt(2))*dt
-		end
-		if v.facing == "ul" then
-			v.x = v.x - (sBullet.speed/math.sqrt(2))*dt
-			v.y = v.y - (sBullet.speed/math.sqrt(2))*dt
-		end
-		if v.facing == "dr" then
-			v.x = v.x + (sBullet.speed/math.sqrt(2))*dt
-			v.y = v.y + (sBullet.speed/math.sqrt(2))*dt
-		end
-		if v.facing == "dl" then
-			v.x = v.x - (sBullet.speed/math.sqrt(2))*dt
-			v.y = v.y + (sBullet.speed/math.sqrt(2))*dt
-		end
+		v.x = v.x + v.xvel * dt
+		v.y = v.y + v.yvel *dt
 	end
 end
 
@@ -130,11 +112,22 @@ end
 --Bullet drawing
 function bulletDraw()
 	for i, v in ipairs(bullets) do
+		love.graphics.setColor(0,250,0)
 		love.graphics.rectangle("fill", v.x, v.y, sBullet.w, sBullet.h)
 	end
 end
 
-
+--In-game HUB drawing
+function hubDraw()
+	love.graphics.setColor(90,90,90)
+	love.graphics.rectangle("fill", 1080, 710, 200, 10)
+	love.graphics.setColor(0,255,0)
+	love.graphics.rectangle("fill", 1080, 710, 200,10)
+	love.graphics.setColor(90,90,90)
+	love.graphics.rectangle("fill", 1080, 700, 200, 10)
+	love.graphics.setColor(255,0,0)
+	love.graphics.rectangle("fill", 1080, 700, 200*(player.health/player.maxHealth),10)
+end
 
 
 
@@ -145,7 +138,8 @@ function player.update(dt)
 end
 
 function player.draw()
-	love.graphics.setColor(255,255,255)
+	love.graphics.setColor(60,60,60)
 	love.graphics.rectangle("fill", player.x, player.y, player.w, player.h)
 	bulletDraw()
+	hubDraw()
 end

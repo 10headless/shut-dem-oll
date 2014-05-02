@@ -2,6 +2,8 @@ require "player"
 
 enemy = {}
 enemies = {}
+enemy.timer = 0
+enemy.timerLimit = love.math.random(3, 5)
 
 function enemy.load(x, y, w, h, health, speed, friction)
 	table.insert(enemies, {x = x, y = y, w = w, h = h, health = health, speed = speed, friction = friction, xvel = 0, yvel = 0})
@@ -97,11 +99,31 @@ function enemy.collisions()
 	end
 end
 
+--Spawning
+function enemy.spawn(dt)
+	enemy.timer = enemy.timer + dt
+	if enemy.timer >= enemy.timerLimit then
+		enemy.timer = 0
+		enemy.timerLimit = love.math.random(3,5)
+		side = math.random(1,4)
+		if side == 1 then
+			enemy.load(love.math.random(1280), -60, 50, 50, 50, 700, 2)
+		elseif side == 2 then
+			enemy.load(love.math.random(1280), 1290, 50, 50, 50, 700, 2)
+		elseif side == 3 then
+			enemy.load(-60, love.math.random(720), 50, 50, 50, 700, 2)
+		elseif side == 4 then
+			enemy.load(730, love.math.random(720), 50, 50, 50, 700, 2)
+		end
+	end
+end
+
 
 function enemy.update(dt)
 	enemy.physics(dt)
 	enemy.move(dt)
 	enemy.collisions()
+	enemy.spawn(dt)
 end
 
 function enemy.draw()
