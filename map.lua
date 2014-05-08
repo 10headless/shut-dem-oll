@@ -3,8 +3,6 @@ require "materials/materials"
 map = {}
 maps = {}
 currentMap = "start"
-path = {}
-pathDis = 0
 mapWidth = 0
 curMap = {}
 

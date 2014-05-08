@@ -45,7 +45,6 @@ function player.control(dt)
 			player.yvel = player.yvel + 2*maxFallSpeed*dt
 		else
 			player.yvel = player.yvel - 10*maxJumpSpeed*dt
-			print(player.yvel.."    "..maxJumpSpeed)
 			if player.yvel <= -maxJumpSpeed then
 				riseYvel = false
 			end	
@@ -71,18 +70,18 @@ function player.control(dt)
 						end
 						if bounds(player.y, player.h, 50*y+10, 50) then
 							if player.x + player.w/2 >= x*50-10 then
-								if player.x <= x*50+15 then
+								if player.x <= x*50+15.3 then
 									if player.xvel < 0 then
 										player.xvel = 0
-										player.x = x*50+15
+										player.x = x*50+15.3
 									end
 								end
 							end
 							if player.x + player.w/2 <= x*50-10 then
-								if player.x + player.w>= x*50+15-50 then
+								if player.x + player.w>= x*50+15-50-0.3 then
 									if player.xvel > 0 then
 										player.xvel = 0
-										player.x = x*50+15-50-player.w
+										player.x = x*50+15-50-player.w-0.3
 									end
 								end
 							end
