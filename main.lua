@@ -28,6 +28,7 @@ function love.update(dt)
 		player.update(dt)
 		enemy.update(dt)
 		update_effect(dt)
+		map.update(dt)
 
 		--Camera movement
 		if player.x+player.w/2 > 1280/2 and player.x + player.w/2 < mapWidth*50+50+30 - 1280/2 then

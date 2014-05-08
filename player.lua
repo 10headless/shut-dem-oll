@@ -70,18 +70,18 @@ function player.control(dt)
 						end
 						if bounds(player.y, player.h, 50*y+10, 50) then
 							if player.x + player.w/2 >= x*50-10 then
-								if player.x <= x*50+15.3 then
+								if player.x <= x*50+15.6 then
 									if player.xvel < 0 then
 										player.xvel = 0
-										player.x = x*50+15.3
+										player.x = x*50+15.6
 									end
 								end
 							end
 							if player.x + player.w/2 <= x*50-10 then
-								if player.x + player.w>= x*50+15-50-0.3 then
+								if player.x + player.w>= x*50+15-50-0.6 then
 									if player.xvel > 0 then
 										player.xvel = 0
-										player.x = x*50+15-50-player.w-0.3
+										player.x = x*50+15-50-player.w-0.6
 									end
 								end
 							end
