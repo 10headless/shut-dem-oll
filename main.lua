@@ -5,6 +5,7 @@ require "menu"
 require "particles"
 require "camera"
 require "map"
+require "quest"
 
 gamestate = "menu"
 
@@ -24,6 +25,9 @@ function love.load()
 end
 
 function love.update(dt)
+	if questTrue == true then
+		gamestate = "quest"
+	end
 	if gamestate == "game" then
 		player.update(dt)
 		enemy.update(dt)
@@ -42,11 +46,12 @@ end
 
 function love.draw()
 	camera:set()
-	if gamestate == "game" then
+	if gamestate == "game" or gamestate == "quest" then
 		map.draw()
 		player.draw()
 		enemy.draw()
 		draw_effect()
+		quest.draw()
 	end
 	if gamestate == "menu" then
 		menu.draw("menu")
@@ -62,6 +67,20 @@ function love.keypressed(key)
 		end
 		if key == keys.jump then
 			player.jump()
+		end
+	end
+	if gamestate == "quest" then
+		if key == "up" then
+			selectedA = selectedA - 1
+			if selectedA == 0 then
+				selectedA = #q.answers
+			end
+		end
+		if key == "down" then
+			selectedA = selectedA + 1
+			if selectedA == #q.answers then
+				selectedA = 1
+			end
 		end
 	end
 end
