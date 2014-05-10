@@ -38,10 +38,7 @@ function map.draw()
 				if checkCollision(b.x, b.y, b.w, b.h, player.x, player.y, player.w, player.h) then
 					love.graphics.setColor(255,255,255)
 					love.graphics.setFont(fontBig)
-					love.graphics.print('Press "e" to interact', 1280/2-fontBig:getWidth('Press "e" to interact')/2, 50)
-					if love.keyboard.isDown("e") then
-						quest.run(qGivers.func)
-					end
+					love.graphics.print('Press "e" to interact', camera.x+1280/2-fontBig:getWidth('Press "e" to interact')/2, 50)
 				end
 			end
 		end
@@ -52,7 +49,7 @@ function map.update(dt)
 	for j, b in ipairs(curMap.qGivers) do
 		if checkCollision(b.x, b.y, b.w, b.h, player.x, player.y, player.w, player.h) then			
 			if love.keyboard.isDown("e") then
-				quest.run(b.func)
+				quest.run(b.func, b.screen)
 			end
 		end
 	end

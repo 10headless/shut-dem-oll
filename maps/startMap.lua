@@ -7,7 +7,7 @@ width = 30
 height = 14
 
 qGivers = {
-	{x=1200, y = 510, w=35, h = 50, func = "1"}
+	{x=1200, y = 510, w=35, h = 50, func = "1", screen = "1"}
 }
 
 m={

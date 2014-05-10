@@ -57,7 +57,7 @@ function player.control(dt)
 			for l, m in ipairs(materials) do
 				if m.id == b then
 					if m.collide then
-						if bounds(player.x, player.w, x*50+15-50, 50) then
+						if bounds(player.x+0.5, player.w-1, x*50+15-50, 50) then
 							if player.y + player.h/2 <= y*50+35 then
 								if player.y + player.h>= y*50+10 then
 									if player.yvel > 0 then
@@ -73,7 +73,7 @@ function player.control(dt)
 								if player.x <= x*50+15.6 then
 									if player.xvel < 0 then
 										player.xvel = 0
-										player.x = x*50+15.6
+										player.x = x*50+15.4
 									end
 								end
 							end
@@ -81,7 +81,7 @@ function player.control(dt)
 								if player.x + player.w>= x*50+15-50-0.6 then
 									if player.xvel > 0 then
 										player.xvel = 0
-										player.x = x*50+15-50-player.w-0.6
+										player.x = x*50+15-50-player.w-0.4
 									end
 								end
 							end
