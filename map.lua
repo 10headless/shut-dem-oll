@@ -32,15 +32,14 @@ function map.draw()
 			end
 			mapWidth = v.width
 			curMap = v 
-			for j, b in ipairs(v.qGivers) do
-				love.graphics.setColor(0,255,0)
-				love.graphics.rectangle("fill", b.x, b.y, b.w, b.h)
-				if checkCollision(b.x, b.y, b.w, b.h, player.x, player.y, player.w, player.h) then
-					love.graphics.setColor(255,255,255)
-					love.graphics.setFont(fontBig)
-					love.graphics.print('Press "e" to interact', 1280/2-fontBig:getWidth('Press "e" to interact')/2, 50)
-					if love.keyboard.isDown("e") then
-						quest.run(qGivers.func)
+			for j, b in ipairs(quests) do
+				if b.place.map == currentMap then
+					love.graphics.setColor(0,255,0)
+					love.graphics.rectangle("fill", b.place.x, b.place.y, b.place.w, b.place.h)
+					if checkCollision(b.place.x, b.place.y, b.place.w, b.place.h, player.x, player.y, player.w, player.h) then
+						love.graphics.setColor(255,255,255)
+						love.graphics.setFont(fontBig)
+						love.graphics.print('Press "e" to interact', camera.x+1280/2-fontBig:getWidth('Press "e" to interact')/2, 50)
 					end
 				end
 			end
@@ -49,10 +48,13 @@ function map.draw()
 end
 
 function map.update(dt)
-	for j, b in ipairs(curMap.qGivers) do
-		if checkCollision(b.x, b.y, b.w, b.h, player.x, player.y, player.w, player.h) then			
-			if love.keyboard.isDown("e") then
-				quest.run(b.func)
+	for j, b in ipairs(quests) do
+		if b.place.map == currentMap then
+			if checkCollision(b.place.x, b.place.y, b.place.w, b.place.h, player.x, player.y, player.w, player.h) then			
+				if love.keyboard.isDown("e") then
+					wholeQuest = b
+					quest.run(b.dialogs, nil)
+				end
 			end
 		end
 	end

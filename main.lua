@@ -12,7 +12,8 @@ gamestate = "menu"
 keys = {jump = " ", down = "s", left = "a", right = "d", shoot = "lctrl", u2 = "up", d2 = "down", r2 = "right", l2 = "left"}
 bullets = {}
 sBullet = {w = 8, h = 8, speed = 400, power = 25}     --Standard bullet (to make stuff easy to tweak and change)
-fontBig = love.graphics.newFont(30)
+fontBig = love.graphics.newFont("assets/sans2.ttf", 30)
+fontMid = love.graphics.newFont("assets/sans2.ttf", 18)
 blood = love.graphics.newImage("assets/blood2.png")
 
 function love.load()
@@ -21,12 +22,17 @@ function love.load()
 	enemy.load(1200, 500, 50, 50, 50, 700, 2)
 	menu.createButton(200, 200, 40, 20, true, true, "PLAY", "play", "menu")
 	menu.createButton(200, 270, 40, 20, true, true, "EXIT", "exit", "menu")
+	quest.loadQuests()
 	map.loadMaps()
 end
 
 function love.update(dt)
 	if questTrue == true then
 		gamestate = "quest"
+	else
+		if gamestate == "quest" then
+			gamestate = "game"
+		end
 	end
 	if gamestate == "game" then
 		player.update(dt)
@@ -62,7 +68,7 @@ end
 
 function love.keypressed(key)
 	if gamestate == "game" then
-		if key == "lctrl" then
+		if key == keys.shoot then
 			player.shoot()
 		end
 		if key == keys.jump then
@@ -73,14 +79,17 @@ function love.keypressed(key)
 		if key == "up" then
 			selectedA = selectedA - 1
 			if selectedA == 0 then
-				selectedA = #q.answers
+				selectedA = #que.answers
 			end
 		end
 		if key == "down" then
 			selectedA = selectedA + 1
-			if selectedA == #q.answers then
+			if selectedA == #que.answers+1 then
 				selectedA = 1
 			end
+		end
+		if key == "return" then
+			quest.enter(selectedA)
 		end
 	end
 end
